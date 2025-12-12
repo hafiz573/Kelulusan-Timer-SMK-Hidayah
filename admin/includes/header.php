@@ -211,7 +211,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'Admin';
                 </a>
             </li>
             <li class="mt-4">
-                <a href="../../logout.php" class="text-danger">
+                <a href="../logout.php" class="text-danger">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </li>
@@ -240,7 +240,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'Admin';
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="../../logout.php">
+                                <a class="dropdown-item" href="../logout.php">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
                                 </a>
                             </li>

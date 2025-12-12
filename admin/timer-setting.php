@@ -135,44 +135,6 @@ $is_expired = isTimerExpired($pdo);
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Timer Information -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6 class="mb-0">
-                                        <i class="fas fa-question-circle me-2"></i>Panduan Timer
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <div class="text-center p-3 border rounded">
-                                                <i class="fas fa-play-circle fa-2x text-primary mb-2"></i>
-                                                <h6>Timer Berjalan</h6>
-                                                <p class="mb-0 small">Siswa belum bisa login</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <div class="text-center p-3 border rounded">
-                                                <i class="fas fa-stop-circle fa-2x text-success mb-2"></i>
-                                                <h6>Timer Selesai</h6>
-                                                <p class="mb-0 small">Siswa bisa login</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <div class="text-center p-3 border rounded">
-                                                <i class="fas fa-redo fa-2x text-warning mb-2"></i>
-                                                <h6>Reset Timer</h6>
-                                                <p class="mb-0 small">Atur ulang deadline</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
