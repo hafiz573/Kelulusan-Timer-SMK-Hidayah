@@ -66,8 +66,8 @@ $is_expired = isTimerExpired($pdo);
                             <form method="POST" action="">
                                 <div class="mb-4">
                                     <label for="deadline" class="form-label">Tanggal & Waktu Deadline *</label>
-                                    <input type="datetime-local" class="form-control" id="deadline" 
-                                           name="deadline" value="<?php echo $current_deadline; ?>" required>
+                                    <input type="text" class="form-control" id="deadline" 
+                                        name="deadline" value="<?php echo date('Y-m-d H:i', strtotime($current_deadline)); ?>" required>
                                     <div class="form-text">
                                         Atur kapan countdown berakhir dan pengumuman dibuka
                                     </div>
@@ -175,5 +175,38 @@ $is_expired = isTimerExpired($pdo);
                     </div>
                 </div>
             </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    flatpickr("#deadline", {
+                        enableTime: true,
+                        noCalendar: false,
+                        // PENTING: Menggunakan format 24 jam (H untuk jam 00-23)
+                        dateFormat: "Y-m-d H:i:00", 
+                        time_24hr: true, // <-- SETTING INI MEMAKSA FORMAT 24 JAM
+                        // Opsi untuk bahasa Indonesia
+                        locale: {
+                            weekdays: {
+                                shorthand: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+                                longhand: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
+                            },
+                            months: {
+                                shorthand: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+                                longhand: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
+                            },
+                            firstDayOfWeek: 1,
+                            ordinal: function() {
+                                return "";
+                            },
+                            // Tambahkan ini jika Anda ingin menghilangkan ikon AM/PM
+                            amPM: ["AM", "PM"], 
+                            rangeSeparator: " to ",
+                            time_24hr: true, // Duplikasi untuk amankan
+                        },
+                    });
+                });
+            </script>
 
 <?php require_once 'includes/footer.php'; ?>

@@ -36,7 +36,7 @@ $users = $stmt->fetchAll();
                                         </span>
                                     </td>
                                     <td><?php echo htmlspecialchars($user['nama']); ?></td>
-                                    <td><?php echo htmlspecialchars($user['no_absen']); ?></td>
+                                    <td><?php // echo htmlspecialchars($user['no_absen']); ?></td>
                                     <td><?php echo htmlspecialchars($user['kelas']); ?></td>
                                     <td>
                                         <?php if($user['status_lulus'] == 'LULUS'): ?>

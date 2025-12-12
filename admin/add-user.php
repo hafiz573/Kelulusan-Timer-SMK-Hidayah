@@ -8,14 +8,14 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_login = strtoupper(sanitizeInput($_POST['id_login'])); // Auto uppercase
     $nama = sanitizeInput($_POST['nama']);
-    $no_absen = sanitizeInput($_POST['no_absen']);
+    // $no_absen = sanitizeInput($_POST['no_absen']);
     $kelas = sanitizeInput($_POST['kelas']);
     $status_lulus = $_POST['status_lulus'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     
     // Validasi
-    if (empty($id_login) || empty($nama) || empty($no_absen) || empty($kelas) || empty($password)) {
+    if (empty($id_login) || empty($nama) || empty($kelas) || empty($password)) {
         $error = 'Semua field wajib diisi!';
     } elseif (!preg_match('/^[A-Z0-9]{4,10}$/', $id_login)) {
         $error = 'ID Login harus 4-10 karakter, hanya huruf dan angka!';
@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $hashed_password = hashPassword($password);
             
             try {
-                $stmt = $pdo->prepare("INSERT INTO users (id_login, nama, no_absen, kelas, status_lulus, password) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$id_login, $nama, $no_absen, $kelas, $status_lulus, $hashed_password]);
+                $stmt = $pdo->prepare("INSERT INTO users (id_login, nama, kelas, status_lulus, password) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$id_login, $nama, $kelas, $status_lulus, $hashed_password]);
                 
                 $success = 'Siswa berhasil ditambahkan dengan ID Login: ' . $id_login;
                 
@@ -92,12 +92,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <!-- <div class="col-md-6 mb-3">
                                 <label for="no_absen" class="form-label">No Absen *</label>
                                 <input type="text" class="form-control" id="no_absen" name="no_absen" 
                                        value="<?php echo $_POST['no_absen'] ?? ''; ?>" 
                                        placeholder="Contoh: 11, 12, 13" required>
-                            </div>
+                            </div> -->
                             <div class="col-md-6 mb-3">
                                 <label for="kelas" class="form-label">Kelas *</label>
                                 <input type="text" class="form-control" id="kelas" name="kelas" 

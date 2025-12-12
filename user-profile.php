@@ -11,7 +11,7 @@ if (!isUserLoggedIn()) {
 $user_id = $_SESSION['user_id'];
 $user_id_login = $_SESSION['user_id_login'];
 $user_nama = $_SESSION['user_nama'];
-$user_no_absen = $_SESSION['user_no_absen'];
+// $user_no_absen = $_SESSION['user_no_absen'];
 $user_kelas = $_SESSION['user_kelas'];
 $user_status = $_SESSION['user_status'];
 
@@ -97,10 +97,6 @@ if ($user_status == 'LULUS') {
                                                     <?php echo htmlspecialchars($user_id_login); ?>
                                                 </span>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-muted">No Absen</th>
-                                            <td class="fw-bold"><?php echo htmlspecialchars($user_no_absen); ?></td>
                                         </tr>
                                         <tr>
                                             <th class="text-muted">Kelas</th>

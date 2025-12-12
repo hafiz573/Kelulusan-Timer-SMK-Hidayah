@@ -6,12 +6,11 @@ requireAdminLogin();
 $stmt = $pdo->query("SELECT 
     id_login,
     nama, 
-    no_absen, 
     kelas, 
     status_lulus,
     DATE(created_at) as tanggal_dibuat
     FROM users 
-    ORDER BY kelas, no_absen");
+    ORDER BY kelas, id_login");
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Set header untuk file CSV
@@ -25,7 +24,7 @@ $output = fopen('php://output', 'w');
 fwrite($output, "\xEF\xBB\xBF");
 
 // Header CSV
-fputcsv($output, ['NO', 'ID LOGIN', 'NAMA SISWA', 'NO ABSEN', 'KELAS', 'STATUS KELULUSAN', 'TANGGAL DIBUAT']);
+fputcsv($output, ['NO', 'ID LOGIN', 'NAMA SISWA', 'KELAS', 'STATUS KELULUSAN', 'TANGGAL DIBUAT']);
 
 // Data user
 $no = 1;
@@ -34,7 +33,7 @@ foreach ($users as $user) {
         $no++,
         $user['id_login'],
         $user['nama'],
-        $user['no_absen'],
+        // $user['no_absen'],
         $user['kelas'],
         $user['status_lulus'],
         $user["tanggal_dibuat"]

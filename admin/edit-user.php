@@ -19,13 +19,13 @@ if (!$user) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_login = strtoupper(sanitizeInput($_POST['id_login']));
     $nama = sanitizeInput($_POST['nama']);
-    $no_absen = sanitizeInput($_POST['no_absen']);
+    // $no_absen = sanitizeInput($_POST['no_absen']);
     $kelas = sanitizeInput($_POST['kelas']);
     $status_lulus = $_POST['status_lulus'];
     $change_password = isset($_POST['change_password']) && $_POST['change_password'] == '1';
     
     // Validasi
-    if (empty($id_login) || empty($nama) || empty($no_absen) || empty($kelas)) {
+    if (empty($id_login) || empty($nama) || empty($kelas)) {
         $error = 'Semua field wajib tidak boleh kosong!';
     } elseif (!preg_match('/^[A-Z0-9]{4,10}$/', $id_login)) {
         $error = 'ID Login harus 4-10 karakter, hanya huruf dan angka!';
@@ -36,16 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if ($stmt->rowCount() > 0) {
             $error = 'ID Login sudah digunakan oleh siswa lain!';
-        } else {
-            // Cek apakah no absen sudah digunakan oleh user lain
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE no_absen = ? AND id != ?");
-            $stmt->execute([$no_absen, $id]);
-            
-            if ($stmt->rowCount() > 0) {
-                $error = 'No Absen sudah digunakan oleh siswa lain!';
             } else {
-                $sql = "UPDATE users SET id_login = ?, nama = ?, no_absen = ?, kelas = ?, status_lulus = ?";
-                $params = [$id_login, $nama, $no_absen, $kelas, $status_lulus];
+                $sql = "UPDATE users SET id_login = ?, nama = ?, kelas = ?, status_lulus = ?";
+                $params = [$id_login, $nama, $kelas, $status_lulus];
                 
                 // Jika password diubah
                 if ($change_password) {
@@ -78,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Update data user untuk ditampilkan
                         $user['id_login'] = $id_login;
                         $user['nama'] = $nama;
-                        $user['no_absen'] = $no_absen;
+                        // $user['no_absen'] = $no_absen;
                         $user['kelas'] = $kelas;
                         $user['status_lulus'] = $status_lulus;
                     } catch(PDOException $e) {
@@ -88,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-}
 ?>
             <div class="card shadow">
                 <div class="card-header bg-white py-3">
@@ -132,11 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <!-- <div class="col-md-6 mb-3">
                                 <label for="no_absen" class="form-label">No Absen *</label>
                                 <input type="text" class="form-control" id="no_absen" name="no_absen" 
                                        value="<?php echo htmlspecialchars($user['no_absen']); ?>" required>
-                            </div>
+                            </div> -->
                             <div class="col-md-6 mb-3">
                                 <label for="kelas" class="form-label">Kelas *</label>
                                 <input type="text" class="form-control" id="kelas" name="kelas" 
@@ -357,10 +349,9 @@ document.getElementById('confirm_password').addEventListener('input', function()
 // Generate contoh ID Login
 function generateExampleId() {
     const kelas = document.getElementById('kelas').value;
-    const noAbsen = document.getElementById('no_absen').value;
     
-    if (!kelas || !noAbsen) {
-        alert('Harap isi Kelas dan No Absen terlebih dahulu');
+    if (!kelas) {
+        alert('Harap isi Kelas terlebih dahulu');
         return;
     }
     
@@ -379,25 +370,24 @@ function generateExampleId() {
     document.getElementById('id_login').dispatchEvent(new Event('blur'));
 }
 
-// Add generate button
-document.addEventListener('DOMContentLoaded', function() {
-    const idLoginGroup = document.getElementById('id_login').parentNode;
-    const generateButton = document.createElement('button');
-    generateButton.type = 'button';
-    generateButton.className = 'btn btn-sm btn-outline-secondary mt-2';
-    generateButton.innerHTML = '<i class="fas fa-magic me-1"></i> Generate ID Login';
-    generateButton.onclick = generateExampleId;
+// // Add generate button
+// document.addEventListener('DOMContentLoaded', function() {
+//     const idLoginGroup = document.getElementById('id_login').parentNode;
+//     const generateButton = document.createElement('button');
+//     generateButton.type = 'button';
+//     generateButton.className = 'btn btn-sm btn-outline-secondary mt-2';
+//     generateButton.innerHTML = '<i class="fas fa-magic me-1"></i> Generate ID Login';
+//     generateButton.onclick = generateExampleId;
     
-    idLoginGroup.appendChild(generateButton);
-});
+//     idLoginGroup.appendChild(generateButton);
+// });
 
 // Auto-generate ID Login jika kosong berdasarkan kelas dan absen
 document.getElementById('kelas').addEventListener('blur', function() {
     const idLogin = document.getElementById('id_login').value;
     const kelas = this.value;
-    const noAbsen = document.getElementById('no_absen').value;
     
-    if (!idLogin && kelas && noAbsen) {
+    if (!idLogin && kelas) {
         generateExampleId();
     }
 });
@@ -407,7 +397,7 @@ document.getElementById('no_absen').addEventListener('blur', function() {
     const kelas = document.getElementById('kelas').value;
     const noAbsen = this.value;
     
-    if (!idLogin && kelas && noAbsen) {
+    if (!idLogin && kelas) {
         generateExampleId();
     }
 });

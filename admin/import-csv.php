@@ -37,7 +37,7 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'ID_LOGIN', 
         'NAMA', 
-        'NO_ABSEN', 
+        // 'NO_ABSEN', 
         'KELAS', 
         'STATUS_LULUS', 
         'PASSWORD'
@@ -47,7 +47,6 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'B021G', 
         'Hafiz', 
-        '11', 
         'XII RPL', 
         'KELULUSAN DITANGGUHKAN', 
         '12345678'
@@ -57,7 +56,6 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'J03167', 
         'Faiq', 
-        '12', 
         'XII RPL', 
         'LULUS', 
         '12345678'
@@ -67,7 +65,6 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'K73131', 
         'KIVA', 
-        '13', 
         'XII RPL', 
         'KELULUSAN DITANGGUHKAN', 
         '12345678'
@@ -110,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                     }
                     
                     // Validasi jumlah kolom
-                    if (count($data) < 6) {
+                    if (count($data) < 5) {
                         $failed_rows[] = [
                             'row' => $row,
                             'data' => $data,
@@ -125,10 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                     // Ambil data dari CSV
                     $id_login = strtoupper($data[0] ?? '');
                     $nama = $data[1] ?? '';
-                    $no_absen = $data[2] ?? '';
-                    $kelas = $data[3] ?? '';
-                    $status_lulus = strtoupper($data[4] ?? '');
-                    $password = $data[5] ?? '';
+                    // $no_absen = $data[2] ?? '';
+                    $kelas = $data[2] ?? '';
+                    $status_lulus = strtoupper($data[3] ?? '');
+                    $password = $data[4] ?? '';
                     
                     // Validasi data
                     $validation_errors = [];
@@ -143,9 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                         $validation_errors[] = 'Nama kosong';
                     }
                     
-                    if (empty($no_absen)) {
-                        $validation_errors[] = 'No Absen kosong';
-                    }
+                    // if (empty($no_absen)) {
+                    //     $validation_errors[] = 'No Absen kosong';
+                    // }
                     
                     if (empty($kelas)) {
                         $validation_errors[] = 'Kelas kosong';
@@ -185,28 +182,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                     }
                     
                     // Cek apakah No Absen sudah ada
-                    $stmt = $pdo->prepare("SELECT id FROM users WHERE no_absen = ?");
-                    $stmt->execute([$no_absen]);
-                    
-                    if ($stmt->rowCount() > 0) {
-                        $failed_rows[] = [
-                            'row' => $row,
-                            'data' => $data,
-                            'error' => 'No Absen sudah digunakan'
-                        ];
-                        continue;
-                    }
+                    // $stmt = $pdo->prepare("SELECT id FROM users WHERE no_absen = ?");
+                    // $stmt->execute([$no_absen]);
                     
                     // Hash password
                     $hashed_password = hashPassword($password);
                     
                     // Insert data ke database
                     $stmt = $pdo->prepare("
-                        INSERT INTO users (id_login, nama, no_absen, kelas, status_lulus, password) 
-                        VALUES (?, ?, ?, ?, ?, ?)
+                        INSERT INTO users (id_login, nama, kelas, status_lulus, password) 
+                        VALUES (?, ?, ?, ?, ?)
                     ");
                     
-                    if ($stmt->execute([$id_login, $nama, $no_absen, $kelas, $status_lulus, $hashed_password])) {
+                    if ($stmt->execute([$id_login, $nama, $kelas, $status_lulus, $hashed_password])) {
                         $imported_count++;
                     } else {
                         $failed_rows[] = [
@@ -291,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                                 <li>File harus berformat CSV dengan encoding UTF-8</li>
                                                 <li>Maksimal ukuran file: 5MB</li>
                                                 <li>Pastikan format kolom sesuai template</li>
-                                                <li>Data yang sudah ada (ID Login/No Absen) akan dilewati</li>
+                                                <li>Data yang sudah ada (ID Login) akan dilewati</li>
                                             </ul>
                                         </div>
                                         
@@ -335,11 +323,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                                     <td>Hafiz Muhammad Fiqar</td>
                                                     <td>Nama lengkap siswa</td>
                                                 </tr>
-                                                <tr>
+                                                <!-- <tr>
                                                     <td><strong>NO_ABSEN</strong></td>
                                                     <td>11</td>
                                                     <td>Nomor absen, UNIQUE</td>
-                                                </tr>
+                                                </tr> -->
                                                 <tr>
                                                     <td><strong>KELAS</strong></td>
                                                     <td>XII RPL</td>
@@ -363,7 +351,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                         <h6><i class="fas fa-exclamation-triangle me-2"></i>Perhatian:</h6>
                                         <ul class="mb-0">
                                             <li>Pastikan header sesuai (baris pertama)</li>
-                                            <li>Gunakan koma (,) sebagai pemisah</li>
+                                            <li>Gunakan colum sebagai pemisah</li>
                                             <li>Password akan di-hash secara otomatis</li>
                                             <li>Data duplikat akan dilewati</li>
                                         </ul>
@@ -390,9 +378,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                             <th width="50">Baris</th>
                                             <th>ID Login</th>
                                             <th>Nama</th>
-                                            <th>No Absen</th>
                                             <th>Kelas</th>
                                             <th>Status</th>
+                                            <th>Password</th>
                                             <th>Error</th>
                                         </tr>
                                     </thead>

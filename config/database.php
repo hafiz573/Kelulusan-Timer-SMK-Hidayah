@@ -139,7 +139,7 @@ function requireUserLogin() {
 function getTimerDeadline($pdo) {
     $stmt = $pdo->query("SELECT deadline FROM timer_setting ORDER BY id DESC LIMIT 1");
     $timer = $stmt->fetch();
-    return $timer ? $timer['deadline'] : date('Y-m-d H:i:s', strtotime('+7 days'));
+    return $timer ? $timer['deadline'] : date('Y-m-d H:i:s');
 }
 
 function isTimerExpired($pdo) {
