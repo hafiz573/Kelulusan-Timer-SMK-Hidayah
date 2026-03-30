@@ -8,6 +8,7 @@ $stmt = $pdo->query("SELECT
     nama, 
     kelas, 
     status_lulus,
+    password,
     DATE(created_at) as tanggal_dibuat
     FROM users 
     ORDER BY kelas, id_login");
@@ -24,7 +25,7 @@ $output = fopen('php://output', 'w');
 fwrite($output, "\xEF\xBB\xBF");
 
 // Header CSV
-fputcsv($output, ['NO', 'ID LOGIN', 'NAMA SISWA', 'KELAS', 'STATUS KELULUSAN', 'TANGGAL DIBUAT']);
+fputcsv($output, ['NO', 'ID LOGIN', 'NAMA SISWA', 'KELAS', 'STATUS KELULUSAN', 'PASSWORD', 'TANGGAL DIBUAT'], ';');
 
 // Data user
 $no = 1;
@@ -33,9 +34,9 @@ foreach ($users as $user) {
         $no++,
         $user['id_login'],
         $user['nama'],
-        // $user['no_absen'],
         $user['kelas'],
         $user['status_lulus'],
+        $user['password'],
         $user["tanggal_dibuat"]
     ], ';');
 }

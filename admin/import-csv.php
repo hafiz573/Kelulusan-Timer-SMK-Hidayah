@@ -127,12 +127,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                     $status_lulus = strtoupper($data[3] ?? '');
                     $password = $data[4] ?? '';
                     
+                    // Tentukan prefix berdasarkan kelas
+                    $prefix = 'X'; // Default
+                    $kelas_upper = strtoupper($kelas);
+                    if (strpos($kelas_upper, 'RPL') !== false) {
+                        $prefix = 'R';
+                    } elseif (strpos($kelas_upper, 'TKJ') !== false) {
+                        $prefix = 'J';
+                    } elseif (strpos($kelas_upper, 'MP') !== false) {
+                        $prefix = 'P';
+                    } elseif (strpos($kelas_upper, 'AKL') !== false) {
+                        $prefix = 'K';
+                    }
+                    
+                    // Generate ID_LOGIN jika kosong
+                    if (empty($id_login)) {
+                        do {
+                            $rand_id = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+                            $id_login = $prefix . $rand_id;
+                            
+                            $stmt_check = $pdo->prepare("SELECT id FROM users WHERE id_login = ?");
+                            $stmt_check->execute([$id_login]);
+                            $exists = $stmt_check->rowCount() > 0;
+                        } while ($exists);
+                        
+                        // Update data di array agar ditampilkan saat gagal/berhasil (opsional untuk report)
+                        $data[0] = $id_login;
+                    }
+                    
+                    // Generate PASSWORD jika kosong
+                    if (empty($password)) {
+                        $password = $id_login . '*';
+                        
+                        // Update data di array agar ditampilkan saat gagal/berhasil (opsional untuk report)
+                        $data[4] = $password;
+                    }
+                    
                     // Validasi data
                     $validation_errors = [];
                     
-                    if (empty($id_login)) {
-                        $validation_errors[] = 'ID Login kosong';
-                    } elseif (!preg_match('/^[A-Z0-9]{4,10}$/', $id_login)) {
+                    if (!preg_match('/^[A-Z0-9]{4,10}$/', $id_login)) {
                         $validation_errors[] = 'Format ID Login salah';
                     }
                     
@@ -152,9 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                         $validation_errors[] = 'Status kelulusan tidak valid';
                     }
                     
-                    if (empty($password)) {
-                        $validation_errors[] = 'Password kosong';
-                    } elseif (strlen($password) < 6) {
+                    if (strlen($password) < 6) {
                         $validation_errors[] = 'Password minimal 6 karakter';
                     }
                     
@@ -316,7 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                                 <tr>
                                                     <td><strong>ID_LOGIN</strong></td>
                                                     <td>K021GM</td>
-                                                    <td>4-10 karakter huruf/angka, UNIQUE</td>
+                                                    <td>Kosongkan untuk generate otomatis (Berdasarkan Jurusan)</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>NAMA</strong></td>
@@ -341,7 +373,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                                 <tr>
                                                     <td><strong>PASSWORD</strong></td>
                                                     <td>siswa123</td>
-                                                    <td>Minimal 6 karakter</td>
+                                                    <td>Kosongkan untuk generate otomatis (Berdasarkan Jurusan)</td>
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -63,11 +63,16 @@ function formatDateTimeIndonesia($datetime) {
 }
 
 function hashPassword($password) {
-    return password_hash($password, PASSWORD_DEFAULT);
+    // Sesuai permintaan, password di-store dan diexport sebagai plain text
+    return $password;
 }
 
-function verifyPassword($password, $hashedPassword) {
-    return password_verify($password, $hashedPassword);
+function verifyPassword($password, $dbPassword) {
+    // Kompatibilitas mundur: bisa login dengan password tersimpan yang berupa hash maupun plain text
+    if (strpos($dbPassword, '$2y$') === 0) {
+        return password_verify($password, $dbPassword);
+    }
+    return $password === $dbPassword;
 }
 
 function sanitizeInput($data) {
@@ -84,7 +89,7 @@ function loginAdmin($nama, $password, $pdo) {
     $stmt->execute([$nama]);
     $admin = $stmt->fetch();
     
-    if ($admin && password_verify($password, $admin['password'])) {
+    if ($admin && verifyPassword($password, $admin['password'])) {
         $_SESSION['admin_id'] = $admin['id'];
         $_SESSION['admin_nama'] = $admin['nama'];
         $_SESSION['admin_role'] = $admin['role'];
@@ -111,7 +116,7 @@ function loginUser($id_login, $password, $pdo) {
     $stmt->execute([$id_login]);
     $user = $stmt->fetch();
     
-    if ($user && password_verify($password, $user['password'])) {
+    if ($user && verifyPassword($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_id_login'] = $user['id_login'];
         $_SESSION['user_nama'] = $user['nama'];
