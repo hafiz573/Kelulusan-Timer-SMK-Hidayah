@@ -6,6 +6,8 @@ requireAdminLogin();
 $stmt = $pdo->query("SELECT 
     id_login,
     nama, 
+    nisn,
+    nis,
     kelas, 
     status_lulus,
     password,
@@ -25,7 +27,7 @@ $output = fopen('php://output', 'w');
 fwrite($output, "\xEF\xBB\xBF");
 
 // Header CSV
-fputcsv($output, ['NO', 'ID LOGIN', 'NAMA SISWA', 'KELAS', 'STATUS KELULUSAN', 'PASSWORD', 'TANGGAL DIBUAT'], ';');
+fputcsv($output, ['NO', 'ID LOGIN', 'NAMA SISWA', 'NISN', 'NIS', 'KELAS', 'STATUS KELULUSAN', 'PASSWORD', 'TANGGAL DIBUAT'], ';');
 
 // Data user
 $no = 1;
@@ -34,6 +36,8 @@ foreach ($users as $user) {
         $no++,
         $user['id_login'],
         $user['nama'],
+        $user['nisn'] ? "'" . $user['nisn'] : '',
+        $user['nis'] ? "'" . $user['nis'] : '',
         $user['kelas'],
         $user['status_lulus'],
         $user['password'],

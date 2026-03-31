@@ -41,7 +41,8 @@ $users = $stmt->fetchAll();
                                     <th width="50">No</th>
                                     <th>ID Login</th>
                                     <th>Nama Siswa</th>
-                                    <th>No Absen</th>
+                                    <th>NISN</th>
+                                    <th>NIS</th>
                                     <th>Kelas</th>
                                     <th>Status</th>
                                     <th width="150">Aksi</th>
@@ -64,7 +65,8 @@ $users = $stmt->fetchAll();
                                         </span>
                                     </td>
                                     <td><?php echo htmlspecialchars($user['nama']); ?></td>
-                                    <td><?php // echo htmlspecialchars($user['no_absen']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['nisn'] ?? '-'); ?></td>
+                                    <td><?php echo htmlspecialchars($user['nis'] ?? '-'); ?></td>
                                     <td><?php echo htmlspecialchars($user['kelas']); ?></td>
                                     <td>
                                         <?php if($user['status_lulus'] == 'LULUS'): ?>

@@ -177,7 +177,6 @@ $recent_users = $stmt->fetchAll();
                                     <thead>
                                         <tr>
                                             <th>Nama Siswa</th>
-                                            <th>No Absen</th>
                                             <th>Kelas</th>
                                             <th>Status</th>
                                             <th>Tanggal</th>
@@ -188,7 +187,6 @@ $recent_users = $stmt->fetchAll();
                                         <?php foreach($recent_users as $user): ?>
                                         <tr>
                                             <td><?php echo htmlspecialchars($user['nama']); ?></td>
-                                            <td><?php echo htmlspecialchars($user['no_absen']); ?></td>
                                             <td><?php echo htmlspecialchars($user['kelas']); ?></td>
                                             <td>
                                                 <?php if($user['status_lulus'] == 'LULUS'): ?>

@@ -37,7 +37,8 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'ID_LOGIN', 
         'NAMA', 
-        // 'NO_ABSEN', 
+        'NISN', 
+        'NIS', 
         'KELAS', 
         'STATUS_LULUS', 
         'PASSWORD'
@@ -47,6 +48,8 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'B021G', 
         'Hafiz', 
+        '0023456781',
+        '2021001',
         'XII RPL', 
         'KELULUSAN DITANGGUHKAN', 
         '12345678'
@@ -56,6 +59,8 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'J03167', 
         'Faiq', 
+        '0023456782',
+        '2021002',
         'XII RPL', 
         'LULUS', 
         '12345678'
@@ -65,6 +70,8 @@ if (isset($_GET['download_template'])) {
     fputcsv($output, [
         'K73131', 
         'KIVA', 
+        '0023456783',
+        '2021003',
         'XII RPL', 
         'KELULUSAN DITANGGUHKAN', 
         '12345678'
@@ -107,11 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                     }
                     
                     // Validasi jumlah kolom
-                    if (count($data) < 5) {
+                    if (count($data) < 7) {
                         $failed_rows[] = [
                             'row' => $row,
                             'data' => $data,
-                            'error' => 'Jumlah kolom tidak sesuai'
+                            'error' => 'Jumlah kolom tidak sesuai (butuh 7)'
                         ];
                         continue;
                     }
@@ -122,10 +129,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                     // Ambil data dari CSV
                     $id_login = strtoupper($data[0] ?? '');
                     $nama = $data[1] ?? '';
-                    // $no_absen = $data[2] ?? '';
-                    $kelas = $data[2] ?? '';
-                    $status_lulus = strtoupper($data[3] ?? '');
-                    $password = $data[4] ?? '';
+                    $nisn = ltrim($data[2] ?? '', "'");
+                    if ($nisn !== '') {
+                        $nisn = str_pad($nisn, 10, '0', STR_PAD_LEFT);
+                    }
+                    $nis = ltrim($data[3] ?? '', "'");
+                    $kelas = $data[4] ?? '';
+                    $status_lulus = strtoupper($data[5] ?? '');
+                    $password = $data[6] ?? '';
                     
                     // Tentukan prefix berdasarkan kelas
                     $prefix = 'X'; // Default
@@ -136,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                         $prefix = 'J';
                     } elseif (strpos($kelas_upper, 'MP') !== false) {
                         $prefix = 'P';
-                    } elseif (strpos($kelas_upper, 'AKL') !== false) {
+                    } elseif (strpos($kelas_upper, 'AK') !== false) {
                         $prefix = 'K';
                     }
                     
@@ -160,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                         $password = $id_login . '*';
                         
                         // Update data di array agar ditampilkan saat gagal/berhasil (opsional untuk report)
-                        $data[4] = $password;
+                        $data[6] = $password;
                     }
                     
                     // Validasi data
@@ -174,9 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                         $validation_errors[] = 'Nama kosong';
                     }
                     
-                    // if (empty($no_absen)) {
-                    //     $validation_errors[] = 'No Absen kosong';
-                    // }
                     
                     if (empty($kelas)) {
                         $validation_errors[] = 'Kelas kosong';
@@ -213,20 +221,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                         continue;
                     }
                     
-                    // Cek apakah No Absen sudah ada
-                    // $stmt = $pdo->prepare("SELECT id FROM users WHERE no_absen = ?");
-                    // $stmt->execute([$no_absen]);
-                    
                     // Hash password
                     $hashed_password = hashPassword($password);
                     
                     // Insert data ke database
                     $stmt = $pdo->prepare("
-                        INSERT INTO users (id_login, nama, kelas, status_lulus, password) 
-                        VALUES (?, ?, ?, ?, ?)
+                        INSERT INTO users (id_login, nama, nisn, nis, kelas, status_lulus, password) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
                     ");
                     
-                    if ($stmt->execute([$id_login, $nama, $kelas, $status_lulus, $hashed_password])) {
+                    if ($stmt->execute([$id_login, $nama, $nisn, $nis, $kelas, $status_lulus, $hashed_password])) {
                         $imported_count++;
                     } else {
                         $failed_rows[] = [
@@ -355,6 +359,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                                     <td>Hafiz Muhammad Fiqar</td>
                                                     <td>Nama lengkap siswa</td>
                                                 </tr>
+                                                <tr>
+                                                    <td><strong>NISN</strong></td>
+                                                    <td>0012345678</td>
+                                                    <td>Nomor Induk Siswa Nasional</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>NIS</strong></td>
+                                                    <td>2021001</td>
+                                                    <td>Nomor Induk Siswa</td>
+                                                </tr>
                                                 <!-- <tr>
                                                     <td><strong>NO_ABSEN</strong></td>
                                                     <td>11</td>
@@ -410,6 +424,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                             <th width="50">Baris</th>
                                             <th>ID Login</th>
                                             <th>Nama</th>
+                                            <th>NISN</th>
+                                            <th>NIS</th>
                                             <th>Kelas</th>
                                             <th>Status</th>
                                             <th>Password</th>
@@ -425,6 +441,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                                             <td><?php echo htmlspecialchars($failed['data'][2] ?? '-'); ?></td>
                                             <td><?php echo htmlspecialchars($failed['data'][3] ?? '-'); ?></td>
                                             <td><?php echo htmlspecialchars($failed['data'][4] ?? '-'); ?></td>
+                                            <td><?php echo htmlspecialchars($failed['data'][5] ?? '-'); ?></td>
+                                            <td><?php echo htmlspecialchars($failed['data'][6] ?? '-'); ?></td>
                                             <td class="text-danger">
                                                 <i class="fas fa-times-circle me-1"></i>
                                                 <?php echo htmlspecialchars($failed['error']); ?>

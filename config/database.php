@@ -25,6 +25,20 @@ try {
     
     // Set timezone untuk MySQL juga
     $pdo->exec("SET time_zone = '+07:00'");
+    
+    // Auto add nisn column if not exists
+    try {
+        $pdo->exec("ALTER TABLE users ADD COLUMN nisn VARCHAR(20) NULL AFTER nama");
+    } catch(PDOException $e) {
+        // Ignored
+    }
+    
+    // Auto add nis column if not exists
+    try {
+        $pdo->exec("ALTER TABLE users ADD COLUMN nis VARCHAR(20) NULL AFTER nisn");
+    } catch (PDOException $e) {
+        // Ignored
+    }
 } catch(PDOException $e) {
     die("Koneksi database gagal: " . $e->getMessage());
 }
@@ -108,6 +122,18 @@ function requireAdminLogin() {
         header('Location: ../admin-login.php');
         exit();
     }
+    
+    // Verifikasi tambahan: pastikan admin masih ada di database
+    global $pdo;
+    if ($pdo) {
+        $stmt = $pdo->prepare("SELECT id FROM admin WHERE id = ?");
+        $stmt->execute([$_SESSION['admin_id']]);
+        if (!$stmt->fetch()) {
+            session_destroy();
+            header('Location: ../admin-login.php?error=Akun admin telah dihapus');
+            exit();
+        }
+    }
 }
 
 // Fungsi Autentikasi User/Siswa DENGAN ID_LOGIN
@@ -137,6 +163,18 @@ function requireUserLogin() {
     if (!isUserLoggedIn()) {
         header('Location: login.php');
         exit();
+    }
+    
+    // Verifikasi tambahan: pastikan user/siswa masih ada di database
+    global $pdo;
+    if ($pdo) {
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        if (!$stmt->fetch()) {
+            session_destroy();
+            header('Location: login.php?error=Akun siswa telah dihapus');
+            exit();
+        }
     }
 }
 

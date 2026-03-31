@@ -2,10 +2,7 @@
 require_once '../config/database.php';
 
 // Cek apakah admin sudah login
-if (!isAdminLoggedIn()) {
-    header('Location: ../admin-login.php');
-    exit();
-}
+requireAdminLogin();
 
 // Ambil data admin dari session
 $admin_id = $_SESSION['admin_id'] ?? 0;

@@ -8,6 +8,11 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_login = strtoupper(sanitizeInput($_POST['id_login'])); // Auto uppercase
     $nama = sanitizeInput($_POST['nama']);
+    $nisn = sanitizeInput($_POST['nisn'] ?? '');
+    if ($nisn !== '') {
+        $nisn = str_pad($nisn, 10, '0', STR_PAD_LEFT);
+    }
+    $nis = sanitizeInput($_POST['nis'] ?? '');
     // $no_absen = sanitizeInput($_POST['no_absen']);
     $kelas = sanitizeInput($_POST['kelas']);
     $status_lulus = $_POST['status_lulus'];
@@ -33,16 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             // Hash password
             $hashed_password = hashPassword($password);
-            
             try {
-                $stmt = $pdo->prepare("INSERT INTO users (id_login, nama, kelas, status_lulus, password) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$id_login, $nama, $kelas, $status_lulus, $hashed_password]);
+                $stmt = $pdo->prepare("INSERT INTO users (id_login, nama, nisn, nis, kelas, status_lulus, password) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$id_login, $nama, $nisn, $nis, $kelas, $status_lulus, $hashed_password]);
                 
                 $success = 'Siswa berhasil ditambahkan dengan ID Login: ' . $id_login;
                 
                 // Reset form
                 $_POST = [];
-            } catch(PDOException $e) {
+            } catch (PDOException $e) {
                 $error = 'Gagal menambahkan siswa: ' . $e->getMessage();
             }
         }
@@ -89,15 +93,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                        value="<?php echo $_POST['nama'] ?? ''; ?>" 
                                        placeholder="Masukkan nama lengkap" required>
                             </div>
-                        </div>
-                        
                         <div class="row">
-                            <!-- <div class="col-md-6 mb-3">
-                                <label for="no_absen" class="form-label">No Absen *</label>
-                                <input type="text" class="form-control" id="no_absen" name="no_absen" 
-                                       value="<?php echo $_POST['no_absen'] ?? ''; ?>" 
-                                       placeholder="Contoh: 11, 12, 13" required>
-                            </div> -->
+                            <div class="col-md-6 mb-3">
+                                <label for="nisn" class="form-label">NISN (Opsional)</label>
+                                <input type="text" class="form-control" id="nisn" name="nisn" 
+                                       value="<?php echo $_POST['nisn'] ?? ''; ?>" 
+                                       placeholder="Contoh: 0012345678">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="nis" class="form-label">NIS (Opsional)</label>
+                                <input type="text" class="form-control" id="nis" name="nis" 
+                                       value="<?php echo $_POST['nis'] ?? ''; ?>" 
+                                       placeholder="Contoh: 2021001">
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="kelas" class="form-label">Kelas *</label>
                                 <input type="text" class="form-control" id="kelas" name="kelas" 
@@ -191,3 +201,5 @@ document.getElementById('addUserForm').addEventListener('submit', function(e) {
     }
 });
 </script>
+
+<?php require_once 'includes/footer.php'; ?>

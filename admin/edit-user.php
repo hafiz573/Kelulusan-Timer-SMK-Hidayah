@@ -19,6 +19,11 @@ if (!$user) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_login = strtoupper(sanitizeInput($_POST['id_login']));
     $nama = sanitizeInput($_POST['nama']);
+    $nisn = sanitizeInput($_POST['nisn'] ?? '');
+    if ($nisn !== '') {
+        $nisn = str_pad($nisn, 10, '0', STR_PAD_LEFT);
+    }
+    $nis = sanitizeInput($_POST['nis'] ?? '');
     // $no_absen = sanitizeInput($_POST['no_absen']);
     $kelas = sanitizeInput($_POST['kelas']);
     $status_lulus = $_POST['status_lulus'];
@@ -37,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($stmt->rowCount() > 0) {
             $error = 'ID Login sudah digunakan oleh siswa lain!';
             } else {
-                $sql = "UPDATE users SET id_login = ?, nama = ?, kelas = ?, status_lulus = ?";
-                $params = [$id_login, $nama, $kelas, $status_lulus];
+                $sql = "UPDATE users SET id_login = ?, nama = ?, nisn = ?, nis = ?, kelas = ?, status_lulus = ?";
+                $params = [$id_login, $nama, $nisn, $nis, $kelas, $status_lulus];
                 
                 // Jika password diubah
                 if ($change_password) {
@@ -71,6 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Update data user untuk ditampilkan
                         $user['id_login'] = $id_login;
                         $user['nama'] = $nama;
+                        $user['nisn'] = $nisn;
+                        $user['nis'] = $nis;
                         // $user['no_absen'] = $no_absen;
                         $user['kelas'] = $kelas;
                         $user['status_lulus'] = $status_lulus;
@@ -124,11 +131,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         
                         <div class="row">
-                            <!-- <div class="col-md-6 mb-3">
-                                <label for="no_absen" class="form-label">No Absen *</label>
-                                <input type="text" class="form-control" id="no_absen" name="no_absen" 
-                                       value="<?php echo htmlspecialchars($user['no_absen']); ?>" required>
-                            </div> -->
+                            <div class="col-md-6 mb-3">
+                                <label for="nisn" class="form-label">NISN (Opsional)</label>
+                                <input type="text" class="form-control" id="nisn" name="nisn" 
+                                       value="<?php echo htmlspecialchars($user['nisn'] ?? ''); ?>">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="nis" class="form-label">NIS (Opsional)</label>
+                                <input type="text" class="form-control" id="nis" name="nis" 
+                                       value="<?php echo htmlspecialchars($user['nis'] ?? ''); ?>">
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="kelas" class="form-label">Kelas *</label>
                                 <input type="text" class="form-control" id="kelas" name="kelas" 
