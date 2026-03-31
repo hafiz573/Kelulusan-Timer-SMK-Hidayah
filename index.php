@@ -34,11 +34,6 @@ $seconds = $interval->format('%s');
             <a class="navbar-brand fw-bold" href="index.php">
                 <i class="fas fa-graduation-cap me-2"></i>Kelulusan SMK
             </a>
-            <div class="d-flex">
-                <a href="admin-login.php" class="btn btn-outline-light btn-sm">
-                    <i class="fas fa-user-shield me-1"></i>Admin
-                </a>
-            </div>
         </div>
     </nav>
 
@@ -164,15 +159,6 @@ $seconds = $interval->format('%s');
                                 <a href="login.php" class="btn btn-success btn-lg py-3">
                                     <i class="fas fa-sign-in-alt me-2"></i>LOGIN SISWA
                                 </a>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <p class="text-muted">
-                                    <small>
-                                        <i class="fas fa-user-shield me-1"></i>
-                                        <a href="admin-login.php" class="text-decoration-none">Login sebagai Admin</a>
-                                    </small>
-                                </p>
                             </div>
                         </div>
                     </div>
