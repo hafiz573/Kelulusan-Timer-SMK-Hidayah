@@ -33,15 +33,17 @@ $admin_role = $_SESSION['admin_role'] ?? 'Admin';
             background: #f8f9fa;
             overflow-x: hidden;
         }
-        
         #sidebar {
             min-width: var(--sidebar-width);
             max-width: var(--sidebar-width);
-            min-height: 100vh;
+            height: 100vh;
             background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
             color: #fff;
             transition: all 0.3s;
             position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
             z-index: 1000;
         }
         
@@ -134,7 +136,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'Admin';
         
         @media (max-width: 768px) {
             #sidebar {
-                margin-left: -var(--sidebar-width);
+                margin-left: calc(-1 * var(--sidebar-width));
             }
             
             #content {
@@ -144,6 +146,7 @@ $admin_role = $_SESSION['admin_role'] ?? 'Admin';
             
             #sidebar.active {
                 margin-left: 0;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.3);
             }
         }
     </style>
