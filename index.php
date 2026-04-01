@@ -19,7 +19,8 @@ $seconds = $interval->format('%s');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Kelulusan - SMK Negeri 1</title>
+    <title>Aplikasi Kelulusan - SMK Hidayah Semarang</title>
+    <link rel="icon" href="img/hidayah.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -193,7 +194,12 @@ $seconds = $interval->format('%s');
                         2025 Aplikasi Kelulusan. All rights reserved.
                     </p>
                     <p class="mb-0">
-                        <small>Version 1.0.0</small>
+                        <small>Version 1.0.9</small>
+                    </p>
+                    <p class="mb-0">
+                        <small>
+                            Creator: <a href="https://github.com/hafiz573" target="_blank" rel="noopener noreferrer">Hafiz Muhammad Fiqar (RPL)</a>
+                        </small>
                     </p>
                 </div>
             </div>

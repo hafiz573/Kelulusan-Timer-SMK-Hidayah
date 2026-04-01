@@ -1,1 +1,2 @@
 ErrorDocument 404 /Kelulusan-Timer-SMK-Hidayah/404.php
+ErrorDocument 403 /Kelulusan-Timer-SMK-Hidayah/forbidden.php

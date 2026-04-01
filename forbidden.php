@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found - Kelulusan SMK</title>
+    <title>403 Forbidden - Kelulusan SMK</title>
     <link rel="icon" href="img/hidayah.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -160,14 +160,9 @@
         <i class="fas fa-graduation-cap floating-icon icon-1"></i>
         <i class="fas fa-search floating-icon icon-2"></i>
         
-        <h1 class="error-code">404</h1>
-        <h2 class="error-message">Halaman Tidak Ditemukan</h2>
-        <p class="error-description">Maaf, halaman yang Anda tuju mungkin telah dipindahkan, dihapus, atau Anda salah memasukkan alamat URL.</p>
-        
-        <a href="/index.php" class="btn-modern">
-            <i class="fas fa-home"></i>
-            Kembali ke Beranda
-        </a>
+        <h1 class="error-code">403</h1>
+        <h2 class="error-message">Forbidden</h2>
+        <p class="error-description">Silahkan Tunggu Beberapa Saat Terlebih Dahulu Sebelum Memasuki Web Kembali</p>
     </div>
 
 </body>
