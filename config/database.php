@@ -66,7 +66,7 @@ function formatDateTimeIndonesia($datetime) {
     
     $timestamp = strtotime($datetime);
     $hari = date('N', $timestamp);
-    $nama_hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][$hari - 1];
+    $nama_hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'][$hari - 1];
     
     $tanggal = date('j', $timestamp);
     $bulan_nama = $bulan[date('n', $timestamp)];
